@@ -1,0 +1,14 @@
+Included database snapshot counts (generated 2026-10-21):
+staff: 1
+rooms: 4
+addons: 5
+bookings: 0
+booking_holds: 1
+payment_transactions: 1
+reviews: 0
+content_items: 0
+site_settings: 0
+web_sessions: 0 (created automatically on server startup)
+audit_log: 5
+
+The database is included to preserve the existing local demo records. Back up your current database before replacing it.

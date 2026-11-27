@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en-ZW">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Payment Status | The Standard Hotel</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body{min-height:100vh;display:grid;place-items:center;padding:24px 0;background:var(--color-ivory)}
+    .payment-shell{width:min(700px,calc(100% - 32px));margin:30px auto}
+    .payment-card{background:#fff;border:1px solid #e5e0d5;box-shadow:var(--shadow);padding:clamp(26px,6vw,64px)}
+    .payment-brand{font-size:.82rem;letter-spacing:.12em;text-transform:uppercase;color:#77736a;margin:0 0 38px}
+    .payment-card h1{font:500 clamp(2.2rem,7vw,3.8rem)/1.1 var(--serif);margin:0 0 24px;overflow-wrap:anywhere}
+    .payment-copy{font-size:1.05rem;color:#514f49;line-height:1.8}
+    .payment-reference{margin:20px 0;overflow-wrap:anywhere}
+    .payment-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+    .payment-actions .btn{min-height:52px;display:inline-flex;align-items:center;justify-content:center;padding:12px 22px;border:0}
+    .payment-actions .btn:disabled{opacity:.65;cursor:wait}
+    .payment-note{font-size:.82rem;color:#77736a;margin-top:22px}
+    .status-label{display:inline-block;margin-bottom:16px;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#6d6a62}
+  </style>
+</head>
+<body>
+  <main class="payment-shell">
+    <section class="payment-card" aria-live="polite">
+      <p class="payment-brand">The Standard Hotel · Payment test</p>
+      <span class="status-label" id="statusLabel">Checking status</span>
+      <h1 id="statusTitle">Checking your payment…</h1>
+      <p class="payment-copy" id="statusMessage">Please wait while we ask Paynow for the latest transaction status.</p>
+      <p class="payment-reference"><strong>Reference:</strong> <span id="referenceText">Loading…</span></p>
+      <p class="payment-copy" id="amountText" hidden></p>
+      <div class="payment-actions">
+        <button class="btn btn-gold" id="checkStatus" type="button">Check payment status</button>
+        <a class="btn btn-gold" href="rooms.html#availability">Return to booking</a>
+      </div>
+      <p class="payment-note">This local test demonstrates the payment flow only. A successful test payment does not create a confirmed room reservation.</p>
+    </section>
+  </main>
+<script>
+(() => {
+  const params = new URLSearchParams(location.search);
+  const reference = params.get('reference') || '';
+  const title = document.getElementById('statusTitle');
+  const message = document.getElementById('statusMessage');
+  const label = document.getElementById('statusLabel');
+  const refText = document.getElementById('referenceText');
+  const amountText = document.getElementById('amountText');
+  const button = document.getElementById('checkStatus');
+  refText.textContent = reference || 'No payment reference was provided';
+
+  async function checkStatus() {
+    if (!reference) {
+      label.textContent = 'Reference missing';
+      title.textContent = 'Payment status unavailable';
+      message.textContent = 'No transaction reference was included in the return address. Return to booking and try the test again.';
+      return;
+    }
+    button.disabled = true;
+    button.textContent = 'Checking…';
+    label.textContent = 'Checking status';
+    try {
+      const response = await fetch('/api/paynow/status/' + encodeURIComponent(reference), { cache: 'no-store' });
+      const data = await response.json();
+      if (!response.ok || !data.success) throw new Error(data.error || 'The status check could not be completed.');
+      if (typeof data.amount === 'number') {
+        amountText.hidden = false;
+        amountText.textContent = 'Test amount: $' + data.amount.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' USD';
+      }
+      if (data.paid === true || data.status === 'paid') {
+        label.textContent = 'Payment test successful';
+        title.textContent = 'Test payment confirmed';
+        message.textContent = 'Paynow reports this transaction as paid. This local demo does not yet create a confirmed room reservation.';
+        button.textContent = 'Payment status confirmed';
+        button.disabled = true;
+        return;
+      }
+      label.textContent = 'Payment not yet confirmed';
+      title.textContent = 'Payment is still pending';
+      message.textContent = 'Paynow has not reported a successful paid status yet. If you just completed the test checkout, wait a few seconds and check again.';
+      button.textContent = 'Check payment status again';
+    } catch (error) {
+      label.textContent = 'Status check';
+      title.textContent = 'We could not confirm the payment yet';
+      message.textContent = error.message || 'Please try checking again in a few seconds. Keep the local server running while testing.';
+      button.textContent = 'Try again';
+    } finally {
+      if (button.textContent !== 'Payment status confirmed') button.disabled = false;
+    }
+  }
+  button.addEventListener('click', checkStatus);
+  checkStatus();
+})();
+</script>
+<script src="cms-public.js" defer></script></body>
+</html>

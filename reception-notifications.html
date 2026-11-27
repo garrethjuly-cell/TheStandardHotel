@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0a0a">
+  <title>Reception Notifications | The Standard Hotel</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; padding: 24px;
+      background: #faf8f3; color: #0a0a0a;
+      font: 16px/1.55 Arial, sans-serif;
+      display: grid; place-items: center;
+    }
+    main {
+      width: min(100%, 520px); background: #fff;
+      border: 1px solid #e7e3db; padding: 28px; border-radius: 12px;
+    }
+    h1 { font-size: 25px; margin: 0 0 8px; }
+    p { color: #555; }
+    button {
+      width: 100%; padding: 15px; margin-top: 12px;
+      background: #0a0a0a; color: #fff; border: 0;
+      border-radius: 6px; font-size: 16px; cursor: pointer;
+    }
+    button:disabled { opacity: .55; cursor: wait; }
+    #status {
+      margin-top: 18px; padding: 12px; background: #f3f1ec;
+      border-radius: 6px; overflow-wrap: anywhere;
+    }
+    .small { font-size: 13px; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>The Standard Hotel</h1>
+  <p>Reception notification setup</p>
+  <p>Open this page on the reception phone, using the browser where you are signed in to your staff account.</p>
+  <button id="enable">Enable reception notifications</button>
+  <button id="testLocal" type="button">Test phone notification</button>
+  <div id="status" role="status" aria-live="polite">Ready to set up this device.</div>
+  <p class="small">Keep notifications enabled in your phone and browser settings. This page does not replace your staff login.</p>
+</main>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-messaging-compat.js"></script>
+<script>
+(() => {
+  const config = {
+    apiKey: "AIzaSyBlqKxXfkVOOn6eIy_OwJDbze8AQcLL10w",
+    authDomain: "the-standard-hotel.firebaseapp.com",
+    projectId: "the-standard-hotel",
+    storageBucket: "the-standard-hotel.firebasestorage.app",
+    messagingSenderId: "501545264045",
+    appId: "1:501545264045:web:bea29d2602363c825eb724"
+  };
+
+  const vapidKey = "BAxi4WoPLTX2zirga6hNXgFjZFUbQrmSW7G9U6pJWwv62jGFPgHAJbFp_hZZgmnQSumLDyvs0iN02aJgIK-SjPo";
+  const button = document.getElementById('enable');
+  const status = document.getElementById('status');
+  const testButton = document.getElementById('testLocal');
+  let registrationInProgress = false;
+  let foregroundListenerAttached = false;
+
+  function show(message) {
+    status.textContent = message;
+  }
+
+  function getDeviceId() {
+    let id = localStorage.getItem('standardHotelReceptionDeviceId');
+    if (!id) {
+      id = (window.crypto && typeof crypto.randomUUID === 'function')
+        ? crypto.randomUUID()
+        : 'sth-' + Date.now() + '-' + Math.random().toString(36).slice(2);
+      localStorage.setItem('standardHotelReceptionDeviceId', id);
+    }
+    return id;
+  }
+
+  async function registerDevice(askPermission) {
+    if (registrationInProgress) return;
+    registrationInProgress = true;
+    button.disabled = true;
+
+    try {
+      if (!window.isSecureContext ||
+          !('serviceWorker' in navigator) ||
+          !('Notification' in window)) {
+        throw new Error('Use the HTTPS website in a supported browser such as Chrome.');
+      }
+
+      if (askPermission && Notification.permission !== 'granted') {
+        const permission = await Notification.requestPermission();
+        if (permission !== 'granted') {
+          throw new Error('Notifications were not allowed. Enable them in browser settings and retry.');
+        }
+      }
+
+      if (Notification.permission !== 'granted') {
+        show('Tap Enable reception notifications once to grant notification permission.');
+        return;
+      }
+
+      if (!window.firebase || !firebase.messaging) {
+        throw new Error('Firebase scripts did not load. Check the internet connection and reload.');
+      }
+      if (!firebase.apps.length) firebase.initializeApp(config);
+
+      const registration = await navigator.serviceWorker.register(
+        '/firebase-messaging-sw.js', { scope: '/' }
+      );
+      await navigator.serviceWorker.ready;
+
+      const messaging = firebase.messaging();
+      const token = await messaging.getToken({
+        vapidKey,
+        serviceWorkerRegistration: registration
+      });
+      if (!token) throw new Error('Firebase did not return a device token.');
+
+      show('Refreshing this phone’s reception registration…');
+      const response = await fetch('/api/staff/devices/register', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          device_id: getDeviceId(),
+          fcm_token: token
+        })
+      });
+      const result = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        if (response.status === 401 || response.status === 403) {
+          throw new Error('Please sign in with an authorised reception, administrator or developer account, then reopen this page.');
+        }
+        throw new Error(result.error || result.message ||
+          ('Device registration failed (HTTP ' + response.status + ').'));
+      }
+
+      // The server sends data-only messages, so read title/body from payload.data.
+      if (!foregroundListenerAttached) {
+        foregroundListenerAttached = true;
+        messaging.onMessage(async (payload) => {
+          const data = payload.data || {};
+          const title = data.title ||
+            (payload.notification && payload.notification.title) ||
+            'The Standard Hotel';
+          const body = data.body ||
+            (payload.notification && payload.notification.body) ||
+            'A new enquiry needs attention.';
+
+          try {
+            if (Notification.permission === 'granted') {
+              await registration.showNotification(title, {
+                body,
+                icon: '/favicon.ico',
+                tag: data.enquiryId
+                  ? 'standard-hotel-enquiry-' + data.enquiryId
+                  : 'standard-hotel-enquiry-' + Date.now(),
+                renotify: true,
+                data: {
+                  url: '/reception-notifications.html',
+                  enquiryId: data.enquiryId || ''
+                }
+              });
+            }
+          } catch (error) {
+            console.error('Foreground notification display failed:', error);
+          }
+        });
+      }
+
+      button.textContent = 'Refresh device registration';
+      show('SUCCESS: This phone is registered. Registration will refresh automatically when you reopen this page while signed in.');
+    } catch (error) {
+      show('Setup incomplete: ' +
+        (error && error.message ? error.message : 'Unknown error'));
+    } finally {
+      registrationInProgress = false;
+      button.disabled = false;
+    }
+  }
+
+  testButton.addEventListener('click', async () => {
+    try {
+      if (!('Notification' in window) || Notification.permission !== 'granted') {
+        show('Tap Enable reception notifications first.');
+        return;
+      }
+      const registration = await navigator.serviceWorker.ready;
+      await registration.showNotification('The Standard Hotel — Phone Test', {
+        body: 'If you can see this, Android and Chrome can display notifications.',
+        icon: '/favicon.ico',
+        tag: 'standard-hotel-local-test',
+        data: { url: '/reception-notifications.html' }
+      });
+      show('Local notification requested. Check the Android notification shade.');
+    } catch (error) {
+      show('Local notification failed: ' +
+        (error && error.message ? error.message : error));
+    }
+  });
+
+  button.addEventListener('click', () => registerDevice(true));
+
+  // Reuse existing permission without prompting again.
+  window.addEventListener('load', () => {
+    if ('Notification' in window && Notification.permission === 'granted') {
+      show('Notifications are allowed. Refreshing this phone’s registration…');
+      registerDevice(false);
+    } else {
+      show('Tap Enable reception notifications once to grant permission and register this phone.');
+    }
+  });
+})();
+</script>
+</body>
+</html>

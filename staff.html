@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Staff Workspace | The Standard Hotel</title>
+<style>
+:root{color-scheme:light;--ink:#171715;--muted:#706f68;--paper:#f6f4ee;--white:#fff;--line:#e2dfd6;--gold:#9a7b46;--red:#9d3e32}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 Arial,Helvetica,sans-serif}header{background:#151512;color:#fff;padding:20px clamp(16px,4vw,48px);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}header strong{font:500 21px Georgia,serif;letter-spacing:.04em}header span{display:block;color:#c7c2b7;font-size:12px;letter-spacing:.12em;text-transform:uppercase;margin-top:4px}.wrap{max-width:1200px;margin:0 auto;padding:28px clamp(14px,3vw,32px) 60px}.panel{background:var(--white);border:1px solid var(--line);padding:clamp(18px,3vw,30px);margin-bottom:20px;border-radius:3px}.login{max-width:440px;margin:7vh auto}.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.16em;color:var(--gold);font-weight:700}h1,h2,h3{font-family:Georgia,serif;font-weight:400;margin:6px 0 16px}h1{font-size:clamp(27px,4vw,38px)}h2{font-size:25px}p{color:var(--muted)}label{display:block;font-size:13px;font-weight:700;margin:12px 0 5px}input,select,textarea{width:100%;border:1px solid #d7d3c9;background:#fff;padding:11px 12px;font:inherit;border-radius:2px;color:var(--ink)}textarea{min-height:90px;resize:vertical}button,.tab{border:1px solid var(--ink);background:var(--ink);color:white;padding:10px 14px;font:inherit;cursor:pointer;border-radius:2px}button.secondary,.tab{background:white;color:var(--ink);border-color:var(--line)}button.danger{background:#fff;color:var(--red);border-color:#d9b7b1}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 20px}.tab[aria-selected=true]{background:var(--ink);color:white;border-color:var(--ink)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}.stat{padding:15px;background:#f8f6f0;border:1px solid var(--line)}.stat b{display:block;font:28px Georgia,serif}.stat span{font-size:12px;color:var(--muted)}.table-wrap{overflow:auto;border:1px solid var(--line)}table{width:100%;border-collapse:collapse;min-width:680px}th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}th{font-size:11px;text-transform:uppercase;letter-spacing:.1em;background:#f8f6f0}td{font-size:13px}.notice{padding:11px 13px;background:#f4f0e5;border-left:3px solid var(--gold);margin:12px 0;color:var(--ink)}.error{border-color:var(--red);color:var(--red)}.hidden{display:none!important}.muted{font-size:12px;color:var(--muted)}.inline{display:flex;align-items:center;gap:8px}.inline input{width:auto}.top-actions{display:flex;gap:8px;align-items:center}.pill{display:inline-block;background:#efede6;padding:3px 8px;font-size:11px;border-radius:20px;text-transform:capitalize}.media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:12px;margin-top:14px}.media-card{border:1px solid var(--line);padding:8px;background:#fff;min-width:0}.media-preview{width:100%;height:105px;object-fit:cover;background:#f1efe9;display:block}.media-card button{width:100%;margin-top:7px}.media-name{font-size:11px;overflow-wrap:anywhere;color:var(--muted);margin-top:5px}.file-pick{display:block;padding:14px;border:2px dashed #bcb5a7;background:#faf8f3;text-align:center;cursor:pointer}.file-pick input{margin-top:8px}@media(max-width:760px){.grid,.stats{grid-template-columns:1fr 1fr}.wrap{padding-top:18px}.panel{padding:17px}}@media(max-width:480px){.grid,.stats{grid-template-columns:1fr}.top-actions{width:100%}.top-actions button{flex:1}}
+</style></head>
+<body>
+<header><div><strong>The Standard Hotel</strong><span>Private staff workspace · Bulawayo</span></div><div class="top-actions"><span id="who" class="hidden"></span><button id="logout" class="secondary hidden">Sign out</button><a href="index.html" style="color:#fff;font-size:13px">View public website</a></div></header>
+<main class="wrap">
+<section id="loginPanel" class="panel login"><div class="eyebrow">Staff access</div><h1>Welcome back.</h1><p>Sign in with the staff account created by your hotel administrator.</p><form id="loginForm"><label for="username">Username</label><input id="username" autocomplete="username" required maxlength="32"><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" required maxlength="128"><div class="actions"><button type="submit">Sign in securely</button></div></form><div id="loginMessage" role="status" class="notice hidden"></div><p class="muted">Accounts cannot be registered from this public page.</p></section>
+<section id="appPanel" class="hidden"><div class="panel"><div class="eyebrow">Hotel operations</div><h1>Management workspace</h1><p id="welcomeText">Manage hotel operations.</p><div id="stats" class="stats"></div></div><nav class="tabs" id="tabs" aria-label="Management sections"><button class="tab" data-tab="overview" aria-selected="true">Overview</button><button class="tab" data-tab="rooms">Rooms & add-ons</button><button class="tab" data-tab="bookings">Bookings</button><button class="tab" data-tab="staff">Staff</button><button class="tab" data-tab="reviews">Reviews</button><button class="tab" data-tab="content">News & content</button><button class="tab" data-tab="settings">Website settings</button><button class="tab" data-tab="audit">Audit log</button><button class="tab" data-tab="reset">Testing & data reset</button></nav><div id="workspace"></div><div id="message" role="status" class="notice hidden"></div></section>
+</main>
+<script>
+const $=s=>document.querySelector(s);let currentStaff=null,currentTab='overview',activeResetPreview=null;
+async function api(url,options={}){const r=await fetch(url,{credentials:'same-origin',headers:{'Content-Type':'application/json',...(options.headers||{})},...options});let data={};try{data=await r.json()}catch{}if(!r.ok)throw new Error(data.error||`Request failed (${r.status})`);return data}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function notice(el,msg,bad=false){el.textContent=msg;el.classList.remove('hidden');el.classList.toggle('error',bad)}
+function can(...roles){return roles.includes(currentStaff?.role)}
+async function enter(staff){currentStaff=staff;$('#loginPanel').classList.add('hidden');$('#appPanel').classList.remove('hidden');$('#who').textContent=`${staff.username} · ${staff.role.replace('_',' ')}`;$('#who').classList.remove('hidden');$('#logout').classList.remove('hidden');$('#welcomeText').textContent=`Signed in as ${staff.username}. Your access level is ${staff.role.replace('_',' ')}.`;$('#tabs').querySelectorAll('[data-tab="staff"],[data-tab="audit"]').forEach(b=>b.classList.toggle('hidden',!can('developer','administrator')));$('#tabs').querySelectorAll('[data-tab="rooms"]').forEach(b=>b.classList.toggle('hidden',!can('developer','administrator')));$('#tabs').querySelectorAll('[data-tab="reviews"],[data-tab="content"],[data-tab="settings"]').forEach(b=>b.classList.toggle('hidden',!can('developer','administrator','read_only')));await loadTab('overview')}
+function table(headers,rows){return `<div class="table-wrap"><table><thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows||'<tr><td colspan="10">No records found.</td></tr>'}</tbody></table></div>`}
+async function loadTab(tab){currentTab=tab;$('#tabs').querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.tab===tab)));$('#message').classList.add('hidden');const w=$('#workspace');w.innerHTML='<div class="panel">Loading…</div>';try{
+if(tab==='overview'){const d=await api('/api/admin/overview');const s=d.overview;$('#stats').innerHTML=Object.entries(s).map(([k,v])=>`<div class="stat"><b>${v}</b><span>${esc(k)}</span></div>`).join('');w.innerHTML=`<div class="panel"><h2>Welcome to the workspace</h2><p>Use the sections above to manage bookings, rates, staff access, guest reviews and site content. All management changes are recorded in the audit log where applicable.</p><div class="notice">This dashboard is an operational tool. Payment status is controlled by the verified Paynow flow and cannot be manually marked paid here.</div></div>`;return}
+if(tab==='rooms'){const [r,a]=await Promise.all([api('/api/admin/rooms'),api('/api/admin/addons')]);w.innerHTML=`<div class="panel"><h2>Room rates & physical inventory</h2><p>Update rates and the actual number of rooms in each category. Inventory changes are saved to the database and used for public date availability. Set a category to 0 to stop offering it online.</p>${table(['Room','Total physical rooms','Single rate (USD)','Double rate (USD)','Action'],r.rooms.map(x=>`<tr><td><input data-room-name="${esc(x.id)}" value="${esc(x.name)}"></td><td><input type="number" min="0" max="10000" step="1" data-room-inventory="${esc(x.id)}" value="${esc(x.inventory_count??0)}"></td><td><input type="number" min="0" step="0.01" data-room-single="${esc(x.id)}" value="${esc(x.price_single??x.price??0)}"></td><td><input type="number" min="0" step="0.01" data-room-double="${esc(x.id)}" value="${esc(x.price_double??x.price??0)}"></td><td><button data-save-room="${esc(x.id)}">Save</button></td></tr>`).join(''))}</div><div class="panel"><h2>Add-ons</h2>${table(['Name','Price (USD)','Status','Action'],a.addons.map(x=>`<tr><td><input data-addon-name="${esc(x.id)}" value="${esc(x.name)}"></td><td><input type="number" min="0" step="0.01" data-addon-price="${esc(x.id)}" value="${esc(x.price)}"></td><td><select data-addon-active="${esc(x.id)}"><option value="1" ${x.active?'selected':''}>Active</option><option value="0" ${!x.active?'selected':''}>Inactive</option></select></td><td><button data-save-addon="${esc(x.id)}">Save</button></td></tr>`).join(''))}</div>`;return}
+if(tab==='bookings'){const d=await api('/api/admin/bookings');w.innerHTML=`<div class="panel"><h2>Bookings</h2><p>Recent bookings are listed below. Only paid bookings can be confirmed.</p>${table(['Reference','Dates','Room / guests','Amount','Payment','Booking status','Action'],d.bookings.map(b=>`<tr><td>${esc(b.reference)}<br><span class="muted">${esc(b.created_at)}</span></td><td>${esc(b.checkin)} – ${esc(b.checkout)}</td><td>${esc(b.room_name)}<br>${b.guests} guest(s)</td><td>$${Number(b.amount).toFixed(2)}</td><td><span class="pill">${esc(b.payment_status)}</span></td><td><select data-booking-status="${b.id}">${['pending','confirmed','cancelled','completed'].map(v=>`<option ${b.booking_status===v?'selected':''}>${v}</option>`).join('')}</select></td><td><button data-save-booking="${b.id}">Save</button></td></tr>`).join(''))}</div>`;return}
+if(tab==='staff'){if(!can('developer','administrator'))throw Error('You do not have permission to view staff management.');const d=await api('/api/admin/staff');w.innerHTML=`<div class="panel"><h2>Create staff account</h2><p>Passwords must be at least 12 characters. Only the developer can create administrator/developer accounts.</p><form id="staffForm"><div class="grid"><div><label>Username</label><input name="username" required minlength="3" maxlength="32" pattern="[A-Za-z0-9._-]+"></div><div><label>Temporary password</label><input name="password" required minlength="12" maxlength="128" type="password"></div><div><label>Role</label><select name="role">${(can('developer')?['administrator','reception','read_only','developer']:['reception','read_only']).map(r=>`<option value="${r}">${r.replace('_',' ')}</option>`).join('')}</select></div></div><div class="actions"><button>Create account</button></div></form></div><div class="panel"><h2>Staff accounts</h2>${table(['ID','Username','Role','Status','Actions'],d.staff.map(s=>`<tr><td>${s.id}</td><td>${esc(s.username)}</td><td><select data-staff-role="${s.id}" ${s.role==='developer'&& !can('developer')?'disabled':''}>${['developer','administrator','reception','read_only'].map(r=>`<option value="${r}" ${s.role===r?'selected':''} ${!can('developer')&&['developer','administrator'].includes(r)?'disabled':''}>${r.replace('_',' ')}</option>`).join('')}</select></td><td>${s.active?'Active':'Disabled'}</td><td><button data-save-staff="${s.id}">Save role</button> <button class="secondary" data-toggle-staff="${s.id}" data-active="${s.active}">${s.active?'Disable':'Enable'}</button></td></tr>`).join(''))}</div>`;return}
+if(tab==='reviews'){const d=await api('/api/admin/reviews');w.innerHTML=`${can('developer','administrator')?`<div class="panel"><h2>Add guest review</h2><form id="reviewForm"><div class="grid"><div><label>Guest name</label><input name="guest_name" required maxlength="100"></div><div><label>Rating</label><select name="rating"><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div></div><label>Review</label><textarea name="explanation" required maxlength="2000"></textarea><label class="inline"><input type="checkbox" name="published"> Publish on the website review carousel</label><div class="actions"><button>Add review</button></div></form></div>`:''}<div class="panel"><h2>Guest reviews</h2>${table(['Guest','Rating','Review','Published','Actions'],d.reviews.map(r=>`<tr><td>${esc(r.guest_name)}</td><td>${r.rating}/5</td><td>${esc(r.explanation)}</td><td><span class="pill">${r.published?'published':'draft'}</span></td><td>${can('developer','administrator')?`<button class="secondary" data-edit-review="${r.id}">Edit</button> <button data-toggle-review="${r.id}" data-published="${r.published}">${r.published?'Unpublish':'Publish'}</button> <button class="danger" data-delete-review="${r.id}">Delete</button>`:'Read only'}</td></tr>`).join(''))}</div>`;return}
+if(tab==='content'){const d=await api('/api/admin/content');w.innerHTML=`${can('developer','administrator')?`<div class="panel"><h2>Website media manager</h2><p>Choose a page, then choose the exact image or video location. You can upload a new file, replace the current one, or remove the CMS replacement to restore the original website image.</p><div class="grid"><div><label for="mediaPageSelect">1. Choose website page</label><select id="mediaPageSelect"><option value="">Loading pages…</option></select></div><div><label for="mediaSlotSelect">2. Choose image or video location</label><select id="mediaSlotSelect" disabled><option value="">Choose a page first</option></select></div></div><div id="mediaSlotInfo" class="notice">Select a page and media location to see its current image or video.</div><div class="panel" style="padding:14px;margin-top:14px"><h3>3. Add or replace media</h3><p>Choose a photo or video from your phone, tablet or computer. Supported: JPG, PNG, WebP, GIF, AVIF, MP4, WebM and MOV. Maximum 15 MB.</p><label class="file-pick">Tap here to choose a new photo or video<input id="mediaFileInput" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/avif,video/mp4,video/webm,video/quicktime"></label><div class="actions"><button type="button" id="uploadMediaButton">Upload to media library (not published)</button><button type="button" class="secondary" id="refreshMediaButton">Refresh media library</button></div><div id="mediaUploadMessage" class="notice hidden" role="status"></div></div><h3>Uploaded media library</h3><p class="muted">Choose an uploaded file to apply it to the selected website location. Unused uploaded files can be deleted. Files currently used by website content are protected from deletion.</p><div id="mediaLibrary" class="media-grid"><p class="muted">Loading your media library…</p></div><div class="actions"><button type="button" class="danger" id="removeMediaOverride" disabled>Restore original website media</button></div><div class="panel" style="margin-top:18px"><h3>Add an item to an existing gallery</h3><p>Choose the page and gallery container. New images and videos inherit that gallery’s layout and are added alongside its existing items.</p><label for="gallerySelect">Gallery location</label><select id="gallerySelect"><option value="">Loading galleries…</option></select><div id="galleryItems" class="media-grid"></div><label for="galleryCaption">Caption / accessibility description (optional)</label><input id="galleryCaption" maxlength="500" placeholder="Describe this image or video"><div class="actions"><button type="button" id="saveGalleryDraft" class="secondary">Save new item as draft</button><button type="button" id="publishGalleryItem">Publish new item</button></div></div><div class="actions"><button type="button" id="saveMediaDraft" class="secondary">Save replacement as draft</button><button type="button" id="publishMediaReplacement">Publish replacement</button></div></div><div class="panel"><h2>Add news or website content</h2><form id="contentForm"><div class="grid"><div><label>Section key</label><input name="section" placeholder="news, home, dining" required maxlength="80"></div><div><label>Title</label><input name="title" maxlength="160"></div><div><label>Media type</label><select name="media_type"><option value="none">No media</option><option value="image">Image</option><option value="video">Video</option></select></div><div><label>Media URL / site path (optional)</label><input id="contentMediaUrl" name="media_url" placeholder="Optional media URL" maxlength="1000"></div></div><label>Story / description</label><textarea name="body" maxlength="10000"></textarea><label class="inline"><input type="checkbox" name="published"> Publish</label><div class="actions"><button>Add content item</button></div></form></div>`:''}<div class="panel"><h2>News and other content items</h2>${table(['Section','Title','Media','Status','Actions'],d.content.filter(c=>c.section!=='media').map(c=>`<tr><td>${esc(c.section)}</td><td>${esc(c.title)}<br><span class="muted">${esc((c.body||'').slice(0,160))}</span></td><td>${esc(c.media_type)}<br>${esc(c.media_url)}</td><td><span class="pill">${c.published?'published':'draft'}</span></td><td>${can('developer','administrator')?`<button class="secondary" data-edit-content="${c.id}">Edit</button> <button data-toggle-content="${c.id}" data-published="${c.published}">${c.published?'Unpublish':'Publish'}</button> <button class="danger" data-delete-content="${c.id}">Delete</button>`:'Read only'}</td></tr>`).join(''))}</div>`;if(can('developer','administrator')){await loadMediaSlots();await loadMediaLibrary();await loadMediaGalleries()}return}
+
+if(tab==='reset'){
+  const d=await api('/api/admin/reset-options');
+  let historyHtml='';
+  let permissionsHtml='';
+
+  if(can('developer','administrator')){
+    try{
+      const h=await api('/api/admin/reset-history');
+      historyHtml=`<div class="panel">
+        <h2>Reset operation history</h2>
+        <p>Most recent recorded reset operations.</p>
+        ${table(['Date','Staff','Categories','Deleted'],
+          (h.operations||[]).map(o=>`<tr>
+            <td>${esc(o.created_at)}</td>
+            <td>${esc(o.actor_username)}</td>
+            <td>${esc((o.categories||[]).join(', ').replaceAll('_',' '))}</td>
+            <td>${esc(JSON.stringify(o.counts||{}))}</td>
+          </tr>`).join(''))}
+      </div>`;
+    }catch(e){
+      historyHtml=`<div class="panel"><h2>Reset history</h2><p>${esc(e.message)}</p></div>`;
+    }
+  }
+
+  if(can('developer')){
+    try{
+      const pm=await api('/api/admin/reset-permissions');
+      const roles=['administrator','reception','read_only'];
+      permissionsHtml=`<div class="panel">
+        <h2>Reset permissions</h2>
+        <p>Choose which reset categories each staff role may execute. Developer access remains unrestricted.</p>
+        ${roles.map(role=>`<h3>${esc(role.replaceAll('_',' '))}</h3>
+          <div class="grid">${pm.categories.map(c=>{
+            const row=pm.permissions.find(x=>x.role===role&&x.category_key===c.key);
+            return `<label class="inline">
+              <input type="checkbox" data-reset-permission
+                data-role="${esc(role)}" data-category="${esc(c.key)}"
+                ${row&&row.can_execute?'checked':''}>
+              ${esc(c.label)}
+            </label>`;
+          }).join('')}</div>`).join('')}
+        <div class="actions">
+          <button type="button" data-reset-save-permissions>Save reset permissions</button>
+        </div>
+      </div>`;
+    }catch(e){
+      permissionsHtml=`<div class="panel"><h2>Reset permissions</h2><p>${esc(e.message)}</p></div>`;
+    }
+  }
+
+  const groups=[...new Set(d.categories.map(c=>c.group))];
+  const categoryHtml=groups.map(group=>`
+    <div class="panel">
+      <h3>${esc(group)}</h3>
+      ${d.categories.filter(c=>c.group===group).map(c=>`
+        <div style="border-top:1px solid var(--line);padding:12px 0">
+          <label class="inline">
+            <input type="checkbox" data-reset-category
+              value="${esc(c.key)}" ${c.canExecute?'':'disabled'}>
+            <strong>${esc(c.label)}</strong>
+            · ${Number(c.count).toLocaleString()} record(s)
+            ${c.canExecute?'':' · Not permitted for your role'}
+          </label>
+          <p>${esc(c.description)}</p>
+          <p class="muted">${esc(c.warning)}</p>
+        </div>`).join('')}
+    </div>`).join('');
+
+  const presetHtml=(d.presets||[]).map(p=>`
+    <button type="button" class="secondary"
+      data-reset-preset="${esc(p.key)}"
+      data-categories="${esc(JSON.stringify(p.categories))}">
+      ${esc(p.label)}
+    </button>`).join('');
+
+  w.innerHTML=`
+    <div class="panel">
+      <h2>Testing & data reset</h2>
+      <p>Your access level: <strong>${esc(d.role)}</strong>.</p>
+      <div class="notice">
+        <strong>Important:</strong> Select only the records you intend to remove.
+        A full database backup is created before execution. Genuine guest enquiries,
+        bookings and payment records must be protected.
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Quick presets</h2>
+      <p>Presets only select categories. They do not execute a reset.</p>
+      <div class="actions">${presetHtml}</div>
+    </div>
+
+    <div class="panel">
+      <h2>Choose reset categories</h2>
+      <div class="actions">
+        <button type="button" class="secondary" data-reset-select-all>Select all permitted</button>
+        <button type="button" class="secondary" data-reset-clear-all>Clear selection</button>
+      </div>
+      ${categoryHtml}
+      <div class="actions">
+        <button type="button" data-reset-preview>Preview selected reset</button>
+      </div>
+      <div id="resetPreview"></div>
+    </div>
+
+    ${permissionsHtml}
+    ${historyHtml}`;
+
+  return;
+}
+
+if(tab==='audit'){const d=await api('/api/admin/audit-log');w.innerHTML=`<div class="panel"><h2>Audit log</h2><p>Most recent 250 management events.</p>${table(['Time','Staff','Action','Target','Details'],d.entries.map(a=>`<tr><td>${esc(a.created_at)}</td><td>${esc(a.actor_username||'Unknown')}</td><td>${esc(a.action)}</td><td>${esc(a.target_type)} · ${esc(a.target_id)}</td><td>${esc(JSON.stringify(a.details))}</td></tr>`).join(''))}</div>`;return}
+}catch(e){w.innerHTML=`<div class="panel"><h2>Unable to load this section</h2><p>${esc(e.message)}</p></div>`}}
+let pendingMedia=null;
+let mediaGalleryData=[];
+async function loadMediaGalleries(){
+ const select=$('#gallerySelect'); if(!select)return;
+ const previous=select.value; const d=await api('/api/admin/media/galleries'); mediaGalleryData=d.galleries||[];
+ select.innerHTML='<option value="">Choose a gallery</option>'+mediaGalleryData.map(g=>`<option value="${esc(g.key)}">${esc(g.pageTitle)} · ${esc(g.label)}</option>`).join('');
+ if(mediaGalleryData.some(g=>g.key===previous))select.value=previous;
+ renderGalleryItems();
+}
+function renderGalleryItems(){
+ const host=$('#galleryItems'),key=$('#gallerySelect')?.value;if(!host)return;
+ const gallery=mediaGalleryData.find(g=>g.key===key);
+ host.innerHTML=gallery?(gallery.items.length?gallery.items.map(i=>`<div class="media-card">${i.media_type==='video'?`<video class="media-preview" src="${esc(i.media_url)}" controls></video>`:`<img class="media-preview" src="${esc(i.media_url)}" alt="${esc(i.body||'Gallery item')}">`}<div class="media-name">${esc(i.body||'No caption')} · ${i.published?'Published':'Draft'}</div><button type="button" class="secondary" data-gallery-edit="${i.id}" data-caption="${esc(i.body||'')}">Edit caption</button><button type="button" data-gallery-toggle="${i.id}" data-published="${i.published}">${i.published?'Unpublish':'Publish'}</button><button type="button" class="danger" data-gallery-delete="${i.id}">Delete item</button></div>`).join(''):'<p class="muted">No CMS items yet. The original gallery items remain in place.</p>'):'<p class="muted">Select a gallery to view its CMS additions.</p>';
+}
+async function savePendingReplacement(published){
+ const key=$('#mediaSlotSelect')?.value;if(!key)throw new Error('Choose an individual media location first.');
+ if(!pendingMedia)throw new Error('Upload a file or choose one from the media library first.');
+ if(published&&!confirm('Publish this replacement on the live website now?'))return;
+ await api('/api/admin/media/slot',{method:'POST',body:JSON.stringify({key,media_url:pendingMedia.url,media_type:pendingMedia.type,published})});
+ pendingMedia=null;await loadMediaSlots();renderMediaSlotsForPage();notice($('#mediaUploadMessage'),published?'Replacement published on the website.':'Replacement saved as a draft. The live website is unchanged.');
+}
+async function saveGalleryItem(published){
+ const key=$('#gallerySelect')?.value;if(!key)throw new Error('Choose a gallery first.');
+ if(!pendingMedia)throw new Error('Upload a file or choose one from the media library first.');
+ if(published&&!confirm('Publish this new gallery item on the live website now?'))return;
+ await api('/api/admin/media/gallery-item',{method:'POST',body:JSON.stringify({key,media_url:pendingMedia.url,media_type:pendingMedia.type,body:$('#galleryCaption')?.value||'',published})});
+ pendingMedia=null;$('#galleryCaption').value='';await loadMediaGalleries();notice($('#mediaUploadMessage'),published?'New gallery item published.':'New gallery item saved as a draft. The live gallery is unchanged.');
+}
+async function loadMediaLibrary(){
+ const host=$('#mediaLibrary'); if(!host)return;
+ try{
+  const d=await api('/api/admin/media');
+  if(!d.media.length){host.innerHTML='<p class="muted">Your media library is empty. Choose a file above to add your first image or video.</p>';return}
+  host.innerHTML=d.media.map(m=>`<div class="media-card">${m.media_type==='image'?`<img class="media-preview" src="${esc(m.url)}" alt="Uploaded media preview" loading="lazy">`:`<video class="media-preview" src="${esc(m.url)}" muted playsinline controls></video>`}<div class="media-name">${esc(m.name)}<br>${(m.size/1024/1024).toFixed(2)} MB</div><button type="button" class="secondary" data-use-media="${esc(m.url)}" data-media-type="${esc(m.media_type)}">Use this ${m.media_type}</button><button type="button" class="danger" data-delete-media="${esc(m.name)}">Delete unused file</button></div>`).join('');
+ }catch(err){host.innerHTML=`<p class="muted">${esc(err.message)}</p>`}
+}
+let mediaSlotData=null;
+async function loadMediaSlots(){
+ const page=$('#mediaPageSelect'),slot=$('#mediaSlotSelect');const previousPage=page?.value||'',previousKey=slot?.value||'';
+ const data=await api('/api/admin/media/slots');mediaSlotData=data;
+ if(!page||!slot)return;
+ page.innerHTML='<option value="">Choose a website page</option>'+data.pages.map(p=>`<option value="${esc(p.page)}">${esc(p.title)}</option>`).join('');
+ page.value=data.pages.some(p=>p.page===previousPage)?previousPage:'';
+ renderMediaSlotsForPage();
+ if(previousKey&&data.slots.some(x=>x.key===previousKey)){slot.value=previousKey;showSelectedMediaSlot();}
+}
+function renderMediaSlotsForPage(){
+ const page=$('#mediaPageSelect')?.value,slot=$('#mediaSlotSelect');if(!slot||!mediaSlotData)return;
+ const items=mediaSlotData.slots.filter(x=>x.page===page);slot.innerHTML='<option value="">Choose an image or video</option>'+items.map(x=>`<option value="${esc(x.key)}">${esc(x.label)} · location ${esc(x.key.split('#').pop())} · ${x.element}</option>`).join('');slot.disabled=!items.length;showSelectedMediaSlot();
+}
+function showSelectedMediaSlot(){
+ const key=$('#mediaSlotSelect')?.value,host=$('#mediaSlotInfo'),remove=$('#removeMediaOverride');if(!host)return;
+ const item=mediaSlotData?.slots.find(x=>x.key===key);if(!item){host.textContent='Select a page and media location to see its current image or video.';if(remove)remove.disabled=true;return}
+ const current=item.override;const previewUrl=current?.media_url||item.source||'';const previewType=current?.media_type||item.element;const preview=previewUrl?(previewType==='video'?`<video class="media-preview" style="max-width:260px;height:150px" src="${esc(previewUrl)}" controls muted playsinline></video>`:`<img class="media-preview" style="max-width:260px;height:150px" src="${esc(previewUrl)}" alt="Selected website media preview">`):'';host.innerHTML=`<strong>${esc(item.pageTitle)} · ${esc(item.label)}</strong><p class="muted">Original website file: ${esc(item.source||'Not specified')}</p>${preview}${current?`<p>Current replacement: <strong>${esc(current.media_url)}</strong> · ${current.published?'Published':'Draft'}</p>`:'<p>No replacement yet. The original website media is currently displayed.</p>'}`;
+ if(remove)remove.disabled=!current;
+}
+async function useMedia(url,type){
+ const slotKey=$('#mediaSlotSelect')?.value;
+ if(slotKey){await api('/api/admin/media/slot',{method:'POST',body:JSON.stringify({key:slotKey,media_url:url,media_type:type,published:true})});await loadMediaSlots();renderMediaSlotsForPage();notice($('#mediaUploadMessage'),'Media saved and published to the selected website location.');return;}
+ const target=$('#mediaTargetContent')?.value;
+ if(target){
+  const d=await api('/api/admin/content'); const item=d.content.find(c=>String(c.id)===String(target));
+  if(!item)throw new Error('Choose an existing content item first.');
+  await api('/api/admin/content/'+target,{method:'PUT',body:JSON.stringify({section:item.section,title:item.title,body:item.body,media_url:url,media_type:type,published:Boolean(item.published)})});
+  notice($('#message'),'Media attached to the selected content item.'); await loadTab('content'); return;
+ }
+ const field=$('#contentMediaUrl'); if(field)field.value=url;
+ const typeSelect=$('#contentForm select[name="media_type"]'); if(typeSelect)typeSelect.value=type;
+ const msg=$('#mediaUploadMessage'); if(msg)notice(msg,'Selected. This media will be attached when you save the content item.');
+}
+$('#workspace').addEventListener('change',e=>{if(e.target.id==='mediaPageSelect')renderMediaSlotsForPage();if(e.target.id==='mediaSlotSelect')showSelectedMediaSlot();if(e.target.id==='gallerySelect')renderGalleryItems();if(e.target.matches('[data-reset-category]')){activeResetPreview=null;const preview=$('#resetPreview');if(preview)preview.innerHTML='';}if(e.target.id==='mediaFileInput'){const f=e.target.files?.[0];if(f){const msg=$('#mediaUploadMessage');if(msg)notice(msg,`Selected: ${f.name} (${(f.size/1024/1024).toFixed(2)} MB). Then choose Save as Draft or Publish.`);}}});
+$('#workspace').addEventListener('click',async e=>{
+ if(e.target.closest('#removeMediaOverride')){const key=$('#mediaSlotSelect')?.value;if(!key)return;const existing=mediaSlotData?.slots.find(x=>x.key===key)?.override;if(!existing)return;if(!confirm('Restore the original website image or video for this location?'))return;await api('/api/admin/content/'+existing.id,{method:'DELETE'});await loadMediaSlots();renderMediaSlotsForPage();notice($('#mediaUploadMessage'),'Original website media restored.');return;}
+ const del=e.target.closest('[data-delete-media]');if(del){if(!confirm('Delete this uploaded file permanently?'))return;await api('/api/admin/media/'+encodeURIComponent(del.dataset.deleteMedia),{method:'DELETE'});await loadMediaLibrary();notice($('#mediaUploadMessage'),'Uploaded file deleted.');return;}
+ const use=e.target.closest('[data-use-media]');
+ if(use){pendingMedia={url:use.dataset.useMedia,type:use.dataset.mediaType};notice($('#mediaUploadMessage'),'Selected and ready. Choose Save as Draft or Publish for the selected replacement or gallery.');return}
+ if(e.target.closest('#refreshMediaButton')){await loadMediaLibrary();return}
+ if(e.target.closest('#uploadMediaButton')){
+  const file=$('#mediaFileInput')?.files?.[0]; const msg=$('#mediaUploadMessage');
+  if(!file){if(msg)notice(msg,'First tap the box and choose a photo or video from your device.',true);return}
+  if(file.size>15*1024*1024){if(msg)notice(msg,'This file is larger than 15 MB. Please choose a smaller file.',true);return}
+  try{
+   if(msg)notice(msg,'Uploading… please keep this page open.');
+   const data=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(new Error('Could not read this file. Please try again.'));reader.readAsDataURL(file)});
+   const result=await api('/api/admin/media/upload',{method:'POST',body:JSON.stringify({data,originalName:file.name})});
+   await loadMediaLibrary(); pendingMedia={url:result.media.url,type:result.media.media_type};
+   if(msg)notice(msg,'Upload complete. The file is in your library but is not live. Choose Save as Draft or Publish.');
+   $('#mediaFileInput').value='';
+  }catch(err){if(msg)notice(msg,err.message,true)}
+  return;
+ }
+ if(e.target.closest('#saveMediaDraft')){try{await savePendingReplacement(false)}catch(err){notice($('#mediaUploadMessage'),err.message,true)}return}
+ if(e.target.closest('#publishMediaReplacement')){try{await savePendingReplacement(true)}catch(err){notice($('#mediaUploadMessage'),err.message,true)}return}
+ if(e.target.closest('#saveGalleryDraft')){try{await saveGalleryItem(false)}catch(err){notice($('#mediaUploadMessage'),err.message,true)}return}
+ if(e.target.closest('#publishGalleryItem')){try{await saveGalleryItem(true)}catch(err){notice($('#mediaUploadMessage'),err.message,true)}return}
+ const targetBtn=e.target.closest('[data-target-media]');
+ if(targetBtn){const sel=$('#mediaTargetContent');if(sel)sel.value=targetBtn.dataset.targetMedia;const library=$('#mediaLibrary');if(library)library.scrollIntoView({behavior:'smooth',block:'start'});notice($('#message'),'Choose a media item below to attach it to this content item.');return}
+});
+$('#loginForm').addEventListener('submit',async e=>{e.preventDefault();$('#loginMessage').classList.add('hidden');try{const d=await api('/api/auth/login',{method:'POST',body:JSON.stringify({username:$('#username').value,password:$('#password').value})});await enter(d.staff)}catch(err){notice($('#loginMessage'),err.message,true)}});
+$('#logout').addEventListener('click',async()=>{try{await api('/api/auth/logout',{method:'POST',body:'{}'})}catch{}currentStaff=null;$('#appPanel').classList.add('hidden');$('#loginPanel').classList.remove('hidden');$('#who').classList.add('hidden');$('#logout').classList.add('hidden');$('#password').value=''});
+$('#tabs').addEventListener('click',e=>{const b=e.target.closest('[data-tab]');if(b)loadTab(b.dataset.tab)});
+$('#workspace').addEventListener('submit',async e=>{e.preventDefault();const f=e.target;const fd=new FormData(f);const obj=Object.fromEntries(fd.entries());if(f.elements.published)obj.published=f.elements.published.checked;if(f.id==='staffForm'){try{await api('/api/admin/staff',{method:'POST',body:JSON.stringify(obj)});notice($('#message'),'Staff account created.');await loadTab('staff')}catch(err){notice($('#message'),err.message,true)}}if(f.id==='reviewForm'){obj.rating=Number(obj.rating);try{await api('/api/admin/reviews',{method:'POST',body:JSON.stringify(obj)});notice($('#message'),'Review added.');await loadTab('reviews')}catch(err){notice($('#message'),err.message,true)}}if(f.id==='contentForm'){try{await api('/api/admin/content',{method:'POST',body:JSON.stringify(obj)});notice($('#message'),'Content item added.');await loadTab('content')}catch(err){notice($('#message'),err.message,true)}}if(f.id==='settingsForm'){try{await api('/api/admin/settings/'+encodeURIComponent(obj.key),{method:'PUT',body:JSON.stringify({value:obj.value||''})});notice($('#message'),'Website setting saved.');await loadTab('settings')}catch(err){notice($('#message'),err.message,true)}}});
+$('#workspace').addEventListener('click',async e=>{const b=e.target.closest('button');if(!b)return;try{
+if(b.dataset.resetPreset){const keys=JSON.parse(b.dataset.categories||'[]');$('#workspace').querySelectorAll('[data-reset-category]').forEach(c=>c.checked=keys.includes(c.value)&&!c.disabled);activeResetPreview=null;$('#resetPreview').innerHTML='';return}
+if(b.hasAttribute('data-reset-select-all')){$('#workspace').querySelectorAll('[data-reset-category]').forEach(c=>c.checked=!c.disabled);activeResetPreview=null;$('#resetPreview').innerHTML='';return}
+if(b.hasAttribute('data-reset-clear-all')){$('#workspace').querySelectorAll('[data-reset-category]').forEach(c=>c.checked=false);activeResetPreview=null;$('#resetPreview').innerHTML='';return}
+if(b.hasAttribute('data-reset-preview')){const categories=[...$('#workspace').querySelectorAll('[data-reset-category]:checked')].map(c=>c.value);const d=await api('/api/admin/reset-preview',{method:'POST',body:JSON.stringify({categories})});activeResetPreview=d;$('#resetPreview').innerHTML=`<div class="notice"><h3>Reset preview</h3><p><strong>${d.totalRecords}</strong> records will be deleted across ${categories.length} selected categories.</p>${Object.entries(d.counts).map(([k,v])=>`<p>${esc(k.replaceAll('_',' '))}: <strong>${v}</strong> records</p>`).join('')}${d.warnings.map(x=>`<p class="muted">${esc(x.warning)}</p>`).join('')}<p class="muted">A full SQLite backup will be created before execution. Preview expires in five minutes and will be rejected if record counts change.</p><label>Type RESET to confirm</label><input id="resetConfirmation" autocomplete="off" maxlength="5" placeholder="RESET"><div class="actions"><button type="button" class="danger" data-reset-execute>Execute selected reset</button></div></div>`;return}
+if(b.hasAttribute('data-reset-execute')){if(!activeResetPreview)throw new Error('Create a fresh preview first.');const confirmation=$('#resetConfirmation').value;const d=await api('/api/admin/reset-execute',{method:'POST',body:JSON.stringify({previewId:activeResetPreview.previewId,confirmation})});activeResetPreview=null;$('#resetPreview').innerHTML=`<div class="notice"><h3>Reset completed</h3><p>${d.totalDeleted} records deleted. Pre-reset backup created successfully.</p>${Object.entries(d.deletedCounts).map(([k,v])=>`<p>${esc(k.replaceAll('_',' '))}: ${v} deleted</p>`).join('')}<p class="muted">${d.signedOutAllStaff?'All staff sessions were cleared. Sign in again to continue.':'Protected hotel and payment records were not changed.'}</p></div>`;if(d.signedOutAllStaff)setTimeout(()=>location.reload(),1500);return}
+if(b.hasAttribute('data-reset-save-permissions')){const permissions={};for(const role of ['administrator','reception','read_only'])permissions[role]=[...$('#workspace').querySelectorAll(`[data-reset-permission][data-role="${role}"]:checked`)].map(c=>c.dataset.category);await api('/api/admin/reset-permissions',{method:'PUT',body:JSON.stringify({permissions})});notice($('#message'),'Reset permissions saved.');await loadTab('reset');return}
+if(b.dataset.saveRoom){const id=b.dataset.saveRoom;await api('/api/admin/rooms/'+encodeURIComponent(id),{method:'PUT',body:JSON.stringify({name:$(`[data-room-name="${id}"]`).value,price_single:Number($(`[data-room-single="${id}"]`).value),price_double:Number($(`[data-room-double="${id}"]`).value),inventory_count:Number($(`[data-room-inventory="${id}"]`).value)})});notice($('#message'),'Room updated.');return}if(b.dataset.saveAddon){const id=b.dataset.saveAddon;await api('/api/admin/addons/'+encodeURIComponent(id),{method:'PUT',body:JSON.stringify({name:$(`[data-addon-name="${id}"]`).value,price:Number($(`[data-addon-price="${id}"]`).value),active:Number($(`[data-addon-active="${id}"]`).value)})});notice($('#message'),'Add-on updated.');return}if(b.dataset.saveBooking){const id=b.dataset.saveBooking;await api('/api/admin/bookings/'+id,{method:'PATCH',body:JSON.stringify({booking_status:$(`[data-booking-status="${id}"]`).value})});notice($('#message'),'Booking status updated.');return}if(b.dataset.saveStaff){const id=b.dataset.saveStaff;await api('/api/admin/staff/'+id,{method:'PATCH',body:JSON.stringify({role:$(`[data-staff-role="${id}"]`).value})});notice($('#message'),'Staff role updated.');return}if(b.dataset.toggleStaff){const id=b.dataset.toggleStaff;await api('/api/admin/staff/'+id,{method:'PATCH',body:JSON.stringify({active:b.dataset.active==='1'?0:1})});notice($('#message'),'Staff account updated.');await loadTab('staff');return}if(b.dataset.editReview){const id=b.dataset.editReview;const d=await api('/api/admin/reviews');const item=d.reviews.find(x=>String(x.id)===id);if(!item)return;const guest_name=prompt('Guest name:',item.guest_name);if(guest_name===null)return;const ratingText=prompt('Rating from 1 to 5:',String(item.rating));if(ratingText===null)return;const explanation=prompt('Review text:',item.explanation);if(explanation===null)return;await api('/api/admin/reviews/'+id,{method:'PUT',body:JSON.stringify({guest_name,rating:Number(ratingText),explanation})});notice($('#message'),'Review updated.');await loadTab('reviews');return}if(b.dataset.toggleReview){const id=b.dataset.toggleReview;await api('/api/admin/reviews/'+id,{method:'PUT',body:JSON.stringify({published:b.dataset.published!=='1'})});notice($('#message'),'Review publication status updated.');await loadTab('reviews');return}if(b.dataset.deleteReview&&confirm('Delete this review permanently?')){await api('/api/admin/reviews/'+b.dataset.deleteReview,{method:'DELETE'});notice($('#message'),'Review deleted.');await loadTab('reviews');return}if(b.dataset.editSetting){const key=b.dataset.editSetting;const rows=await api('/api/admin/settings');const item=rows.settings.find(x=>x.key===key);if(!item)return;const value=prompt('Update setting value:',item.value);if(value===null)return;await api('/api/admin/settings/'+encodeURIComponent(key),{method:'PUT',body:JSON.stringify({value})});notice($('#message'),'Website setting updated.');await loadTab('settings');return}if(b.dataset.editContent){const id=b.dataset.editContent;const rows=await api('/api/admin/content');const item=rows.content.find(x=>String(x.id)===id);if(!item)return;const section=prompt('Section key:',item.section);if(section===null)return;const title=prompt('Title:',item.title);if(title===null)return;const body=prompt('Story / description:',item.body);if(body===null)return;const media_type=prompt('Media type: none, image, or video',item.media_type);if(media_type===null)return;const media_url=prompt('Media URL or site-relative path:',item.media_url);if(media_url===null)return;await api('/api/admin/content/'+id,{method:'PUT',body:JSON.stringify({section,title,body,media_type,media_url})});notice($('#message'),'Content item updated.');await loadTab('content');return}if(b.dataset.toggleContent){const id=b.dataset.toggleContent;const rows=await api('/api/admin/content');const item=rows.content.find(x=>String(x.id)===id);await api('/api/admin/content/'+id,{method:'PUT',body:JSON.stringify({published:!item.published})});notice($('#message'),'Content publication status updated.');await loadTab('content');return}if(b.dataset.deleteContent&&confirm('Delete this content item permanently?')){await api('/api/admin/content/'+b.dataset.deleteContent,{method:'DELETE'});notice($('#message'),'Content deleted.');await loadTab('content');return}}catch(err){notice($('#message'),err.message,true)}});
+(async()=>{try{const d=await api('/api/auth/me');await enter(d.staff)}catch{}})();
+</script></body></html>

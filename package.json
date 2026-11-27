@@ -1,0 +1,10 @@
+{
+  "name": "standard-hotel-railway",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "postinstall": "npm install --prefix server --omit=dev",
+    "start": "node railway-start.js"
+  },
+  "engines": { "node": ">=22.13.0" }
+}

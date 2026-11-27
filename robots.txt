@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://thestandardhotelbyo.com/sitemap.xml
